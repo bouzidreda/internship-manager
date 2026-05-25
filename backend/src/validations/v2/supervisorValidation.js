@@ -39,3 +39,11 @@ export const createStagiaireSchema = Joi.object({
   skills: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())).optional(),
   experience: Joi.string().max(1000).optional().allow("", null)
 });
+
+export const updateStagiaireSchema = Joi.object({
+  fullName: Joi.string().max(140).optional().allow("", null),
+  phone: Joi.string().max(20).optional().allow("", null),
+  education: Joi.string().max(500).optional().allow("", null),
+  skills: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())).optional(),
+  experience: Joi.string().max(1000).optional().allow("", null)
+});

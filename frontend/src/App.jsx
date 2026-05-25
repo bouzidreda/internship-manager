@@ -11,7 +11,6 @@ import InternsPage from "./pages/InternsPage";
 import LandingPage from "./pages/LandingPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
-import ReportsPage from "./pages/ReportsPage";
 import ReportsPageEnhanced from "./pages/ReportsPageEnhanced";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import StudentProfilePage from "./pages/StudentProfilePage";

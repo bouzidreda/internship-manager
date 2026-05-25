@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 const AuthPageHeader = () => {
   return (
@@ -12,6 +13,7 @@ const AuthPageHeader = () => {
       </div>
 
       <nav className="landing-actions">
+        <ThemeToggle />
         <Link className="ghost-btn" to="/">
           Retour page d'accueil
         </Link>

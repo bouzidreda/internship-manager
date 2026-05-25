@@ -47,6 +47,17 @@ const buildProjectNotificationText = (projectTitle, projectDescription, taskTitl
   return lines.join("\n\n");
 };
 
+const normalizeSkills = (skills) => {
+  if (Array.isArray(skills)) {
+    return skills.map((skill) => String(skill).trim()).filter(Boolean).join(",");
+  }
+
+  return typeof skills === "string" ? skills.trim() : "";
+};
+
+const computeProfileCompleted = (profile) =>
+  Boolean(profile.full_name && profile.phone && profile.education && profile.skills && profile.cv_url);
+
 /** Stagiaires created by this supervisor who are not on an active or paused assignment. */
 export const getPendingStagiaires = async (req, res, next) => {
   try {
@@ -129,6 +140,10 @@ export const createStagiaire = async (req, res, next) => {
       shouldSendPasswordSetup = true;
     } else {
       studentUserId = existingUser.rows[0].id;
+      await client.query(
+        "UPDATE users SET is_active = true, is_email_verified = true WHERE id = $1",
+        [studentUserId]
+      );
     }
 
     const existingStudent = await client.query(
@@ -187,6 +202,18 @@ export const createStagiaire = async (req, res, next) => {
         );
       }
 
+      const refreshed = await client.query(
+        `SELECT full_name, phone, education, skills, cv_url FROM students WHERE id = $1`,
+        [existingStudent.rows[0].id]
+      );
+      await client.query(
+        `UPDATE students
+         SET profile_completed = $1,
+             updated_at = NOW()
+         WHERE id = $2`,
+        [computeProfileCompleted(refreshed.rows[0]), existingStudent.rows[0].id]
+      );
+
       await client.query("COMMIT");
       return res.status(200).json({ studentId: existingStudent.rows[0].id, existing: true });
     }
@@ -208,12 +235,20 @@ export const createStagiaire = async (req, res, next) => {
         skillsCsv,
         experience || null,
         fileUrl,
-        Boolean(resolvedFullName && fileUrl)
+        computeProfileCompleted({
+          full_name: resolvedFullName,
+          phone: phone || null,
+          education: education || null,
+          skills: skillsCsv,
+          cv_url: fileUrl
+        })
       ]
     );
 
     const studentId = studentInsert.rows[0].id;
     let passwordSetupToken = null;
+
+    shouldSendPasswordSetup = true;
 
     if (shouldSendPasswordSetup) {
       passwordSetupToken = await issuePasswordResetToken(client, studentUserId);
@@ -230,12 +265,78 @@ export const createStagiaire = async (req, res, next) => {
       }
     }
 
-    return res.status(201).json({ studentId, warning });
+    return res.status(201).json({
+      studentId,
+      setupEmailSent: shouldSendPasswordSetup && !warning,
+      warning
+    });
   } catch (error) {
     await client.query("ROLLBACK");
     return next(error);
   } finally {
     client.release();
+  }
+};
+
+export const updateStagiaire = async (req, res, next) => {
+  try {
+    const { studentId } = req.params;
+    const { fullName, phone, education, skills, experience } = req.body;
+
+    const supervisor = await getSupervisor(req.user.id);
+    if (!supervisor) {
+      return res.status(403).json({ error: "Not authorized as supervisor" });
+    }
+
+    const current = await query(
+      `SELECT s.*
+       FROM students s
+       WHERE s.id = $1 AND s.created_by_supervisor_id = $2`,
+      [studentId, supervisor.id]
+    );
+
+    if (current.rows.length === 0) {
+      return res.status(404).json({ error: "Student not found" });
+    }
+
+    const curr = current.rows[0];
+    const nextProfile = {
+      full_name: fullName !== undefined ? fullName || null : curr.full_name,
+      phone: phone !== undefined ? phone || null : curr.phone,
+      education: education !== undefined ? education || null : curr.education,
+      skills: skills !== undefined ? normalizeSkills(skills) : curr.skills,
+      experience: experience !== undefined ? experience || null : curr.experience,
+      cv_url: req.file ? `/uploads/${req.file.filename}` : curr.cv_url
+    };
+
+    const updated = await query(
+      `UPDATE students
+       SET full_name = $1,
+           phone = $2,
+           education = $3,
+           skills = $4,
+           experience = $5,
+           cv_url = $6,
+           profile_completed = $7,
+           updated_at = NOW()
+       WHERE id = $8 AND created_by_supervisor_id = $9
+       RETURNING id, full_name, phone, education, skills, experience, cv_url, profile_completed, updated_at`,
+      [
+        nextProfile.full_name,
+        nextProfile.phone,
+        nextProfile.education,
+        nextProfile.skills,
+        nextProfile.experience,
+        nextProfile.cv_url,
+        computeProfileCompleted(nextProfile),
+        studentId,
+        supervisor.id
+      ]
+    );
+
+    return res.json(updated.rows[0]);
+  } catch (error) {
+    return next(error);
   }
 };
 

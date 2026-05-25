@@ -1,249 +1,55 @@
 {
-  "currentUrl": "http://localhost:8081/login",
+  "currentUrl": "http://127.0.0.1:5173/",
   "refs": {
     "@e1": {
       "ref": "@e1",
-      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > nav:nth-of-type(1) > a:nth-of-type(1)",
-      "tag": "a",
-      "type": "",
-      "text": "Retour page d'accueil"
+      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > nav:nth-of-type(1) > button:nth-of-type(1)",
+      "tag": "button",
+      "type": "button",
+      "text": "Activer le mode sombre"
     },
     "@e2": {
       "ref": "@e2",
-      "selector": "#email",
-      "tag": "input",
-      "type": "email",
-      "text": "nom@entreprise.com"
+      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > nav:nth-of-type(1) > a:nth-of-type(1)",
+      "tag": "a",
+      "type": "",
+      "text": "Se connecter"
     },
     "@e3": {
       "ref": "@e3",
-      "selector": "#password",
-      "tag": "input",
-      "type": "password",
-      "text": "••••••••"
+      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > header:nth-of-type(1) > nav:nth-of-type(1) > a:nth-of-type(2)",
+      "tag": "a",
+      "type": "",
+      "text": "Demarrer"
     },
     "@e4": {
       "ref": "@e4",
-      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > form:nth-of-type(1) > button:nth-of-type(1)",
-      "tag": "button",
-      "type": "submit",
-      "text": "Se connecter"
+      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > a:nth-of-type(1)",
+      "tag": "a",
+      "type": "",
+      "text": "Découvrir la plateforme"
     },
     "@e5": {
       "ref": "@e5",
-      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > p:nth-of-type(1) > a:nth-of-type(1)",
+      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > a:nth-of-type(2)",
       "tag": "a",
       "type": "",
-      "text": "S'inscrire"
+      "text": "Voir le workflow"
     },
     "@e6": {
       "ref": "@e6",
-      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2) > p:nth-of-type(2) > a:nth-of-type(1)",
+      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(6) > div:nth-of-type(1) > a:nth-of-type(1)",
       "tag": "a",
       "type": "",
-      "text": "Réinitialiser"
+      "text": "Creer un compte"
+    },
+    "@e7": {
+      "ref": "@e7",
+      "selector": "body > div:nth-of-type(1) > div:nth-of-type(1) > main:nth-of-type(1) > section:nth-of-type(6) > div:nth-of-type(1) > a:nth-of-type(2)",
+      "tag": "a",
+      "type": "",
+      "text": "J ai deja un compte"
     }
   },
-  "consoleErrors": [
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Warning: Received `%s` for a non-boolean attribute `%s`.\n\nIf you want to write it to the DOM, pass a string instead: %s=\"%s\" or %s={value.toString()}.%s true jsx jsx true jsx \n    at style\n    at div\n    at AuthIllustration\n    at div\n    at div\n    at div\n    at LoginPage (http://127.0.0.1:4173/src/pages/LoginPage.jsx:26:32)\n    at RenderedRoute (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4131:5)\n    at Routes (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4601:5)\n    at App\n    at AuthProvider (http://127.0.0.1:4173/src/context/AuthContext.jsx:21:32)\n    at Router (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4544:15)\n    at BrowserRouter (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:5290:5)"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Warning: Received `%s` for a non-boolean attribute `%s`.\n\nIf you want to write it to the DOM, pass a string instead: %s=\"%s\" or %s={value.toString()}.%s true jsx jsx true jsx \n    at style\n    at div\n    at AuthIllustration\n    at div\n    at div\n    at div\n    at LoginPage (http://127.0.0.1:4173/src/pages/LoginPage.jsx:26:32)\n    at RenderedRoute (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4131:5)\n    at Routes (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4601:5)\n    at App\n    at AuthProvider (http://127.0.0.1:4173/src/context/AuthContext.jsx:21:32)\n    at Router (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4544:15)\n    at BrowserRouter (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:5290:5)"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Warning: Received `%s` for a non-boolean attribute `%s`.\n\nIf you want to write it to the DOM, pass a string instead: %s=\"%s\" or %s={value.toString()}.%s true jsx jsx true jsx \n    at style\n    at div\n    at AuthIllustration\n    at div\n    at div\n    at div\n    at LoginPage (http://127.0.0.1:4173/src/pages/LoginPage.jsx:26:32)\n    at RenderedRoute (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4131:5)\n    at Routes (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4601:5)\n    at App\n    at AuthProvider (http://127.0.0.1:4173/src/context/AuthContext.jsx:21:32)\n    at Router (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4544:15)\n    at BrowserRouter (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:5290:5)"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Warning: Received `%s` for a non-boolean attribute `%s`.\n\nIf you want to write it to the DOM, pass a string instead: %s=\"%s\" or %s={value.toString()}.%s true jsx jsx true jsx \n    at style\n    at div\n    at AuthIllustration\n    at div\n    at div\n    at div\n    at LoginPage (http://127.0.0.1:4173/src/pages/LoginPage.jsx:26:32)\n    at RenderedRoute (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4131:5)\n    at Routes (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4601:5)\n    at App\n    at AuthProvider (http://127.0.0.1:4173/src/context/AuthContext.jsx:21:32)\n    at Router (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4544:15)\n    at BrowserRouter (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:5290:5)"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Warning: Received `%s` for a non-boolean attribute `%s`.\n\nIf you want to write it to the DOM, pass a string instead: %s=\"%s\" or %s={value.toString()}.%s true jsx jsx true jsx \n    at style\n    at div\n    at AuthIllustration\n    at div\n    at div\n    at div\n    at LoginPage (http://127.0.0.1:4173/src/pages/LoginPage.jsx:26:32)\n    at RenderedRoute (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4131:5)\n    at Routes (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4601:5)\n    at App\n    at AuthProvider (http://127.0.0.1:4173/src/context/AuthContext.jsx:21:32)\n    at Router (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4544:15)\n    at BrowserRouter (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:5290:5)"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Warning: Received `%s` for a non-boolean attribute `%s`.\n\nIf you want to write it to the DOM, pass a string instead: %s=\"%s\" or %s={value.toString()}.%s true jsx jsx true jsx \n    at style\n    at div\n    at AuthIllustration\n    at div\n    at div\n    at div\n    at LoginPage (http://127.0.0.1:4173/src/pages/LoginPage.jsx:26:32)\n    at RenderedRoute (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4131:5)\n    at Routes (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4601:5)\n    at App\n    at AuthProvider (http://127.0.0.1:4173/src/context/AuthContext.jsx:21:32)\n    at Router (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4544:15)\n    at BrowserRouter (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:5290:5)"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Warning: Received `%s` for a non-boolean attribute `%s`.\n\nIf you want to write it to the DOM, pass a string instead: %s=\"%s\" or %s={value.toString()}.%s true jsx jsx true jsx \n    at style\n    at div\n    at AuthIllustration\n    at div\n    at div\n    at div\n    at LoginPage (http://127.0.0.1:4173/src/pages/LoginPage.jsx:26:32)\n    at RenderedRoute (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4131:5)\n    at Routes (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4601:5)\n    at App\n    at AuthProvider (http://127.0.0.1:4173/src/context/AuthContext.jsx:21:32)\n    at Router (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4544:15)\n    at BrowserRouter (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:5290:5)"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Warning: Received `%s` for a non-boolean attribute `%s`.\n\nIf you want to write it to the DOM, pass a string instead: %s=\"%s\" or %s={value.toString()}.%s true jsx jsx true jsx \n    at style\n    at div\n    at AuthIllustration\n    at div\n    at div\n    at div\n    at LoginPage (http://127.0.0.1:4173/src/pages/LoginPage.jsx:26:32)\n    at RenderedRoute (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4131:5)\n    at Routes (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4601:5)\n    at App\n    at AuthProvider (http://127.0.0.1:4173/src/context/AuthContext.jsx:21:32)\n    at Router (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4544:15)\n    at BrowserRouter (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:5290:5)"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Warning: Received `%s` for a non-boolean attribute `%s`.\n\nIf you want to write it to the DOM, pass a string instead: %s=\"%s\" or %s={value.toString()}.%s true jsx jsx true jsx \n    at style\n    at div\n    at AuthIllustration\n    at div\n    at div\n    at div\n    at LoginPage (http://127.0.0.1:4173/src/pages/LoginPage.jsx:26:32)\n    at RenderedRoute (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4131:5)\n    at Routes (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4601:5)\n    at App\n    at AuthProvider (http://127.0.0.1:4173/src/context/AuthContext.jsx:21:32)\n    at Router (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:4544:15)\n    at BrowserRouter (http://127.0.0.1:4173/node_modules/.vite/deps/react-router-dom.js?v=ba4425b2:5290:5)"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Error fetching unread count: AxiosError: Network Error"
-    },
-    {
-      "type": "error",
-      "message": "Error fetching unread count: AxiosError: Network Error"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Error fetching unread count: AxiosError: Network Error"
-    },
-    {
-      "type": "error",
-      "message": "Error fetching unread count: AxiosError: Network Error"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Error fetching unread count: AxiosError: Network Error"
-    },
-    {
-      "type": "error",
-      "message": "Error fetching unread count: AxiosError: Network Error"
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition."
-    },
-    {
-      "type": "warn",
-      "message": "⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath."
-    },
-    {
-      "type": "error",
-      "message": "Error fetching unread count: AxiosError: Network Error"
-    }
-  ]
+  "consoleErrors": []
 }

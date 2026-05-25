@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { getHomePathForRole } from "../utils/roleHome";
 import LandingHeroVisual from "../components/LandingHeroVisual";
+import ThemeToggle from "../components/ThemeToggle";
 
 const workflowSteps = [
   {
@@ -112,6 +113,7 @@ const LandingPage = () => {
         </div>
 
         <nav className="landing-actions">
+          <ThemeToggle />
           <Link className="ghost-btn" to="/login">
             Se connecter
           </Link>

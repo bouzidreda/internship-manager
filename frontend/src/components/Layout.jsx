@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import apiClient from "../api/client";
+import ThemeToggle from "./ThemeToggle";
 import { getHomePathForRole } from "../utils/roleHome";
 
 const NAV_ICONS = {
@@ -224,7 +225,10 @@ const Layout = () => {
             <h2>Bienvenue</h2>
             <p>{user?.email}</p>
           </div>
-          <span className="topbar-role">{user?.role}</span>
+          <div className="topbar-actions">
+            <ThemeToggle />
+            <span className="topbar-role">{user?.role}</span>
+          </div>
         </header>
 
         <section className="page-wrapper">

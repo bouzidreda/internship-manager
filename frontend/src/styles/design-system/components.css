@@ -71,11 +71,11 @@
 .ds-btn--danger {
   background: var(--danger-bg);
   color: var(--danger);
-  border-color: #fecaca;
+  border-color: color-mix(in srgb, var(--danger) 36%, var(--border));
 }
 
 .danger-btn:hover:not(:disabled) {
-  background: #fee2e2;
+  background: color-mix(in srgb, var(--danger-bg) 76%, var(--danger));
 }
 
 .primary-btn:disabled,
@@ -194,29 +194,29 @@
 .alert-error,
 .ds-alert--error {
   background: var(--danger-bg);
-  border-color: #fecaca;
-  color: #991b1b;
+  border-color: color-mix(in srgb, var(--danger) 38%, transparent);
+  color: var(--danger);
 }
 
 .alert-success,
 .ds-alert--success {
   background: var(--success-bg);
-  border-color: #a7f3d0;
-  color: #065f46;
+  border-color: color-mix(in srgb, var(--success) 38%, transparent);
+  color: var(--success);
 }
 
 .alert-warning,
 .ds-alert--warning {
   background: var(--warning-bg);
-  border-color: #fde68a;
-  color: #92400e;
+  border-color: color-mix(in srgb, var(--warning) 38%, transparent);
+  color: var(--warning);
 }
 
 .alert-info,
 .ds-alert--info {
   background: var(--info-bg);
-  border-color: #bfdbfe;
-  color: #1e40af;
+  border-color: color-mix(in srgb, var(--info) 38%, transparent);
+  color: var(--info);
 }
 
 /* —— Forms —— */

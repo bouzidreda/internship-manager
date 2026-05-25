@@ -359,6 +359,7 @@ export const listReportsForValidation = async (req, res, next) => {
       `SELECT
          r.id,
          r.title,
+         r.file_url,
          r.status,
          r.feedback,
          r.created_at,

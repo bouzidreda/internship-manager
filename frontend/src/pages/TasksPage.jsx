@@ -6,7 +6,6 @@ import EmptyState from "../components/EmptyState";
 import LoadingSpinner from "../components/LoadingSpinner";
 import PageLayout from "../components/PageLayout";
 import StatusBadge from "../components/StatusBadge";
-import StudentPdfReportForm from "../components/tasks/StudentPdfReportForm";
 import TaskModal from "../components/tasks/TaskModal";
 import { Alert, Button, Card, StatCard } from "../components/ui";
 import { useToast } from "../context/ToastContext";
@@ -383,8 +382,6 @@ const TasksPage = () => {
           </div>
         )}
       </Card>
-
-      {isStudent && <StudentPdfReportForm />}
 
       {/* Create task modal (supervisor) */}
       {createOpen && (

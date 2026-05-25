@@ -4,6 +4,7 @@
 @import "./layout.css";
 @import "./pages.css";
 @import "./tasks.css";
+@import "./desktop.css";
 
 /* Override legacy global transition (too heavy) */
 * {

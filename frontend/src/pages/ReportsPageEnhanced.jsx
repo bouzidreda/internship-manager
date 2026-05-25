@@ -1,359 +1,241 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import apiClient from "../api/client";
+import EmptyState from "../components/EmptyState";
 import LoadingSpinner from "../components/LoadingSpinner";
+import PageLayout from "../components/PageLayout";
+import StatusBadge from "../components/StatusBadge";
+import StudentPdfReportForm from "../components/tasks/StudentPdfReportForm";
+import { Alert, Button, Card } from "../components/ui";
+import { useToast } from "../context/ToastContext";
 import { useAuth } from "../hooks/useAuth";
 import "../styles/reports-form.css";
 
+const formatDate = (value) => (value ? new Date(value).toLocaleDateString("fr-FR") : "-");
+
 const ReportsPageEnhanced = () => {
   const { user } = useAuth();
+  const { showToast } = useToast();
   const [reports, setReports] = useState([]);
-  const [interns, setInterns] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [message, setMessage] = useState("");
-  const [form, setForm] = useState({ internId: "", title: "", content: "" });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [charCount, setCharCount] = useState(0);
+  const [busyId, setBusyId] = useState(null);
 
   const canValidate = user?.role === "supervisor";
   const isStudent = user?.role === "student";
 
-  const loadData = async () => {
+  const loadData = useCallback(async ({ silent = false } = {}) => {
     try {
-      setLoading(true);
+      if (!silent) {
+        setLoading(true);
+      }
       setError("");
-      const [reportsRes, progressRes] = await Promise.all([
-        isStudent ? apiClient.get("/reports/my") : apiClient.get("/reports/validation/list"),
-        isStudent ? apiClient.get("/students/progress") : Promise.resolve({ data: [] })
-      ]);
-
-      const uniqueInterns = new Map();
-      (Array.isArray(progressRes.data) ? progressRes.data : []).forEach((item) => {
-        if (item.intern_id && !uniqueInterns.has(item.intern_id)) {
-          uniqueInterns.set(item.intern_id, item);
-        }
-      });
-
-      setReports(Array.isArray(reportsRes.data) ? reportsRes.data : []);
-      setInterns(Array.from(uniqueInterns.values()));
+      const { data } = await apiClient.get(isStudent ? "/reports/my" : "/reports/validation/list");
+      setReports(Array.isArray(data) ? data : []);
     } catch (err) {
-      setError(err.response?.data?.message || "Erreur lors du chargement des rapports");
+      setError(err.response?.data?.message || "Erreur lors du chargement des rapports.");
     } finally {
       setLoading(false);
     }
-  };
+  }, [isStudent]);
 
   useEffect(() => {
     loadData();
-  }, []);
-
-  const handleInputChange = (field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    if (field === 'content') {
-      setCharCount(value.length);
-    }
-  };
-
-  const validateForm = () => {
-    const errors = [];
-    
-    if (!form.title.trim()) {
-      errors.push("Le titre est requis");
-    }
-    
-    if (!form.internId) {
-      errors.push("La sélection du stage est requise");
-    }
-    
-    if (!form.content.trim()) {
-      errors.push("Le contenu est requis");
-    } else if (form.content.length < 50) {
-      errors.push("Le contenu doit contenir au moins 50 caractères");
-    }
-    
-    return errors;
-  };
-
-  const submitReport = async (event) => {
-    event.preventDefault();
-    
-    const validationErrors = validateForm();
-    if (validationErrors.length > 0) {
-      setError(validationErrors.join(" | "));
-      return;
-    }
-
-    setIsSubmitting(true);
-    setError("");
-    setMessage("");
-
-    try {
-      const { data } = await apiClient.post("/reports", {
-        internId: form.internId,
-        title: form.title.trim(),
-        content: form.content.trim()
-      });
-
-      await apiClient.patch(`/reports/${data.id}/submit`);
-      setForm({ internId: "", title: "", content: "" });
-      setCharCount(0);
-      setMessage("✅ Rapport soumis avec succès pour validation");
-      await loadData();
-    } catch (err) {
-      setError(err.response?.data?.message || "❌ Envoi du rapport impossible");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const submitDraft = async (reportId) => {
-    try {
-      setError("");
-      setMessage("");
-      await apiClient.patch(`/reports/${reportId}/submit`);
-      setMessage("✅ Rapport soumis pour validation");
-      await loadData();
-    } catch (err) {
-      setError(err.response?.data?.message || "❌ Soumission du rapport impossible");
-    }
-  };
+  }, [loadData]);
 
   const validateReport = async (reportId, status) => {
-    const fallback = status === "validated" ? "Rapport validé" : "Rapport à revoir";
+    const fallback = status === "validated" ? "Rapport valide." : "Rapport a revoir.";
     const feedback = window.prompt("Feedback", fallback);
     if (feedback === null) return;
 
     try {
-      setError("");
-      setMessage("");
-      await apiClient.patch(`/reports/${reportId}/validate`, {
-        status,
-        feedback
-      });
-      setMessage(status === "validated" ? "✅ Rapport validé avec succès" : "⚠️ Rapport rejeté");
+      setBusyId(reportId);
+      await apiClient.patch(`/reports/${reportId}/validate`, { status, feedback });
+      showToast(status === "validated" ? "Rapport valide avec succes." : "Rapport rejete.", "success");
       await loadData();
     } catch (err) {
-      setError(err.response?.data?.message || "❌ Validation impossible");
+      const message = err.response?.data?.message || "Validation impossible.";
+      setError(message);
+      showToast(message, "error");
+    } finally {
+      setBusyId(null);
     }
   };
 
-  const getStatusBadge = (status) => {
-    const statusConfig = {
-      draft: { color: '#6b7280', bg: '#f3f4f6', label: 'Brouillon' },
-      submitted: { color: '#d97706', bg: '#fef3c7', label: 'Soumis' },
-      validated: { color: '#059669', bg: '#ecfdf5', label: 'Validé' },
-      rejected: { color: '#dc2626', bg: '#fef2f2', label: 'Rejeté' }
-    };
-    
-    const config = statusConfig[status] || statusConfig.draft;
-    return (
-      <span 
-        className="status-badge" 
-        style={{
-          backgroundColor: config.bg,
-          color: config.color,
-          padding: '4px 12px',
-          borderRadius: '20px',
-          fontSize: '0.75rem',
-          fontWeight: '600',
-          border: `1px solid ${config.color}20`
-        }}
-      >
-        {config.label}
-      </span>
-    );
+  const handleReportSubmitted = (report) => {
+    if (report?.id) {
+      setReports((currentReports) => [
+        report,
+        ...currentReports.filter((currentReport) => currentReport.id !== report.id)
+      ]);
+    }
+
+    loadData({ silent: true });
+  };
+
+  const previewPdf = async (report) => {
+    try {
+      setBusyId(report.id);
+      const response = await apiClient.get(`/reports/${report.id}/pdf`, { responseType: "blob" });
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      window.open(url, "_blank", "noopener,noreferrer");
+      window.setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+    } catch (err) {
+      const message = err.response?.data?.message || "Apercu du PDF impossible.";
+      showToast(message, "error");
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const downloadPdf = async (report) => {
+    try {
+      setBusyId(report.id);
+      const response = await apiClient.get(`/reports/${report.id}/pdf`, { responseType: "blob" });
+      const url = window.URL.createObjectURL(response.data);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `${report.title || "rapport"}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      const message = err.response?.data?.message || "Telechargement du PDF impossible.";
+      showToast(message, "error");
+    } finally {
+      setBusyId(null);
+    }
   };
 
   if (loading) return <LoadingSpinner label="Chargement des rapports..." />;
 
   return (
-    <div className="page-grid">
-      {isStudent && (
-        <section className="reports-form-container">
-          <div className="reports-form-header">
-            <h2>Soumettre un rapport</h2>
-            <p className="reports-form-subtitle">
-              Partagez vos progrès et réalisations avec votre superviseur
-            </p>
-          </div>
-          
-          <form className="reports-form" onSubmit={submitReport}>
-            <div className="reports-form-group">
-              <label className="reports-form-label required">
-                Titre du rapport
-              </label>
-              <div style={{ position: 'relative' }}>
-                <input
-                  type="text"
-                  className="reports-form-input"
-                  placeholder="Ex: Rapport hebdomadaire - Semaine 3"
-                  value={form.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  required
-                  disabled={isSubmitting}
-                  maxLength={100}
-                />
-                <span className="reports-form-icon">📝</span>
-              </div>
-            </div>
+    <PageLayout
+      title={canValidate ? "Rapports a valider" : "Rapports"}
+      subtitle={
+        isStudent
+          ? "Soumettez votre rapport de stage au format PDF et suivez son statut."
+          : "Consultez les rapports PDF soumis par vos stagiaires et validez-les."
+      }
+      containerClassName="reports-page"
+    >
+      {error && <Alert variant="error">{error}</Alert>}
 
-            <div className="reports-form-group">
-              <label className="reports-form-label required">
-                Stage concerné
-              </label>
-              <div style={{ position: 'relative' }}>
-                <select
-                  className="reports-form-select"
-                  value={form.internId}
-                  onChange={(e) => handleInputChange('internId', e.target.value)}
-                  required
-                  disabled={isSubmitting}
-                >
-                  <option value="">Sélectionner un stage</option>
-                  {interns.map((intern) => (
-                    <option key={intern.intern_id} value={intern.intern_id}>
-                      {intern.project_title 
-                        ? `${intern.project_title} (${intern.intern_status})` 
-                        : `Stage ${intern.intern_id}`
-                      }
-                    </option>
-                  ))}
-                </select>
-                <span className="reports-form-icon">💼</span>
-              </div>
-            </div>
+      {isStudent && <StudentPdfReportForm onSubmitted={handleReportSubmitted} />}
 
-            <div className="reports-form-group">
-              <label className="reports-form-label required">
-                Contenu du rapport
-              </label>
-              <textarea
-                className="reports-form-textarea"
-                placeholder="Décrivez en détail vos activités, réalisations, difficultés rencontrées et objectifs atteints cette semaine..."
-                value={form.content}
-                onChange={(e) => handleInputChange('content', e.target.value)}
-                required
-                disabled={isSubmitting}
-                minLength={50}
-                maxLength={2000}
-              />
-              <div className={`reports-form-char-counter ${charCount > 1800 ? 'error' : charCount > 1500 ? 'warning' : ''}`}>
-                {charCount}/2000 caractères
-              </div>
-            </div>
-
-            <button 
-              type="submit" 
-              className={`reports-form-submit ${isSubmitting ? 'reports-form-loading' : ''}`}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Soumission en cours...' : '📤 Soumettre le rapport'}
-            </button>
-          </form>
-
-          {error && (
-            <div className="reports-form-error">
-              <span>⚠️</span>
-              {error}
-            </div>
-          )}
-          
-          {message && (
-            <div className="reports-form-success">
-              <span>✅</span>
-              {message}
-            </div>
-          )}
-        </section>
-      )}
-
-      <section className="card">
-        <h3>{canValidate ? "Rapports à valider" : "Historique des rapports"}</h3>
-        
-        {error && <p className="form-error">{error}</p>}
-        {message && <p className="form-success">{message}</p>}
-        
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Titre</th>
-                <th>Stage</th>
-                <th>Statut</th>
-                <th>Feedback</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reports.map((report) => (
-                <tr key={report.id}>
-                  <td>
-                    <strong>{report.title}</strong>
-                  </td>
-                  <td>{report.project_title || "-"}</td>
-                  <td>{getStatusBadge(report.status)}</td>
-                  <td>
-                    {report.feedback ? (
-                      <span style={{ 
-                        fontStyle: 'italic', 
-                        color: '#6b7280',
-                        fontSize: '0.9rem' 
-                      }}>
-                        "{report.feedback}"
-                      </span>
-                    ) : (
-                      <span style={{ color: '#9ca3af' }}>-</span>
-                    )}
-                  </td>
-                  <td>
-                    {canValidate && report.status === "submitted" && (
-                      <div className="inline-actions">
-                        <button
-                          type="button"
-                          className="primary-btn small"
-                          onClick={() => validateReport(report.id, "validated")}
-                          style={{ marginRight: '8px' }}
-                        >
-                          ✅ Valider
-                        </button>
-                        <button
-                          type="button"
-                          className="danger-btn small"
-                          onClick={() => validateReport(report.id, "rejected")}
-                        >
-                          ❌ Rejeter
-                        </button>
-                      </div>
-                    )}
-                    {isStudent && report.status === "draft" && (
-                      <button 
-                        type="button" 
-                        className="primary-btn small" 
-                        onClick={() => submitDraft(report.id)}
-                      >
-                        📤 Soumettre
-                      </button>
-                    )}
-                    {!((canValidate && report.status === "submitted") || (isStudent && report.status === "draft")) && (
-                      <span>-</span>
-                    )}
-                  </td>
-                </tr>
-              ))}
-              {reports.length === 0 && (
+      <Card title={canValidate ? "File de validation" : "Historique des rapports"}>
+        {reports.length === 0 ? (
+          <EmptyState
+            icon="▤"
+            title="Aucun rapport"
+            description={
+              isStudent
+                ? "Vos rapports PDF soumis apparaitront ici."
+                : "Aucun rapport PDF n'est en attente de validation."
+            }
+          />
+        ) : (
+          <div className="table-wrap">
+            <table>
+              <thead>
                 <tr>
-                  <td colSpan={5} style={{ textAlign: 'center', padding: '40px' }}>
-                    <div style={{ color: '#6b7280', fontSize: '1.1rem' }}>
-                      📄 Aucun rapport trouvé
-                    </div>
-                  </td>
+                  <th>Titre</th>
+                  {canValidate && <th>Stagiaire</th>}
+                  <th>Stage</th>
+                  <th>Statut</th>
+                  <th>Date</th>
+                  <th>Feedback</th>
+                  <th>Actions</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
-      </section>
-    </div>
+              </thead>
+              <tbody>
+                {reports.map((report) => (
+                  <tr key={report.id}>
+                    <td>
+                      <strong>{report.title}</strong>
+                      {report.file_url && <div className="muted-cell">PDF joint</div>}
+                    </td>
+                    {canValidate && <td>{report.student_name || "-"}</td>}
+                    <td>{report.project_title || "-"}</td>
+                    <td>
+                      <StatusBadge status={report.status} />
+                    </td>
+                    <td>{formatDate(report.submitted_at || report.created_at)}</td>
+                    <td>
+                      <div className="report-feedback-cell">
+                        <span>{report.feedback || "-"}</span>
+                        {canValidate && report.file_url && (
+                          <div className="report-feedback-actions" aria-label={`PDF de ${report.title}`}>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              disabled={busyId === report.id}
+                              onClick={() => previewPdf(report)}
+                            >
+                              Apercu
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="secondary"
+                              size="sm"
+                              disabled={busyId === report.id}
+                              onClick={() => downloadPdf(report)}
+                            >
+                              PDF
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                    <td>
+                      <div className="inline-actions">
+                        {isStudent && report.file_url && (
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            size="sm"
+                            disabled={busyId === report.id}
+                            onClick={() => downloadPdf(report)}
+                          >
+                            PDF
+                          </Button>
+                        )}
+                        {canValidate && report.status === "submitted" && (
+                          <>
+                            <Button
+                              type="button"
+                              size="sm"
+                              disabled={busyId === report.id}
+                              onClick={() => validateReport(report.id, "validated")}
+                            >
+                              Valider
+                            </Button>
+                            <Button
+                              type="button"
+                              variant="danger"
+                              size="sm"
+                              disabled={busyId === report.id}
+                              onClick={() => validateReport(report.id, "rejected")}
+                            >
+                              Rejeter
+                            </Button>
+                          </>
+                        )}
+                        {!report.file_url && !(canValidate && report.status === "submitted") && (
+                          <span className="muted-cell">-</span>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </Card>
+    </PageLayout>
   );
 };
 

@@ -5,7 +5,7 @@ import { Alert, Button, Card } from "../ui";
 
 const MAX_PDF_BYTES = 10 * 1024 * 1024;
 
-const StudentPdfReportForm = () => {
+const StudentPdfReportForm = ({ onSubmitted }) => {
   const { showToast } = useToast();
   const fileInputRef = useRef(null);
   const [interns, setInterns] = useState([]);
@@ -82,15 +82,25 @@ const StudentPdfReportForm = () => {
       formData.append("internId", internId);
       formData.append("pdf", pdfFile);
 
-      await apiClient.post("/reports/pdf", formData, {
+      const { data } = await apiClient.post("/reports/pdf", formData, {
         headers: { "Content-Type": "multipart/form-data" }
       });
+
+      const selectedIntern = interns.find((intern) => String(intern.intern_id) === String(internId));
 
       setTitle("");
       setInternId("");
       setPdfFile(null);
       if (fileInputRef.current) fileInputRef.current.value = "";
       showToast("Rapport PDF soumis avec succès.", "success");
+      onSubmitted?.({
+        ...data,
+        project_title: selectedIntern?.project_title || data.project_title,
+        company_name: selectedIntern?.company_name || data.company_name,
+        intern_status: selectedIntern?.intern_status || data.intern_status,
+        submitted_at: data.submitted_at || new Date().toISOString(),
+        status: data.status || "submitted"
+      });
     } catch (err) {
       const message = err.response?.data?.message || "Échec de l'envoi du rapport PDF.";
       setError(message);

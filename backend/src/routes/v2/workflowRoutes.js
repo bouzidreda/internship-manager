@@ -7,7 +7,7 @@ import * as notificationController from "../../controllers/v2/notificationContro
 import { authenticate } from "../../middlewares/authMiddleware.js";
 import { uploadCV } from "../../middlewares/uploadMiddleware.js";
 import { validate } from "../../middlewares/validate.js";
-import { createStagiaireSchema } from "../../validations/v2/supervisorValidation.js";
+import { createStagiaireSchema, updateStagiaireSchema } from "../../validations/v2/supervisorValidation.js";
 
 const router = express.Router();
 
@@ -18,6 +18,13 @@ router.post(
   uploadCV.single("cv"),
   validate(createStagiaireSchema),
   supervisorWorkflowController.createStagiaire
+);
+router.put(
+  "/supervisors/students/:studentId",
+  authenticate,
+  uploadCV.single("cv"),
+  validate(updateStagiaireSchema),
+  supervisorWorkflowController.updateStagiaire
 );
 router.post("/supervisors/students/accept", authenticate, supervisorWorkflowController.acceptStudent);
 router.delete(

@@ -2,28 +2,11 @@
   "cookies": [],
   "origins": [
     {
-      "origin": "http://localhost:8081",
+      "origin": "http://127.0.0.1:5173",
       "localStorage": [
         {
-          "name": "theme",
+          "name": "stageflow:theme",
           "value": "light"
-        }
-      ]
-    },
-    {
-      "origin": "http://127.0.0.1:4173",
-      "localStorage": [
-        {
-          "name": "theme",
-          "value": "light"
-        },
-        {
-          "name": "token",
-          "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjMwMzBjZjZjLTRjODctNDZjNi05MzY2LWZlNDhiNTI1Y2UxYiIsInJvbGUiOiJzdXBlcnZpc29yIiwiZW1haWwiOiJzdXBlcnZpc29yMUBkZW1vLmxvY2FsIiwiaWF0IjoxNzc3ODQxMjM2LCJleHAiOjE3Nzc5Mjc2MzZ9.cPsFr76rragPtSsvWiFHovPGV3Z-5gWS2wbBGJy3pNw"
-        },
-        {
-          "name": "user",
-          "value": "{\"id\":\"3030cf6c-4c87-46c6-9366-fe48b525ce1b\",\"email\":\"supervisor1@demo.local\",\"role\":\"supervisor\"}"
         }
       ]
     }
