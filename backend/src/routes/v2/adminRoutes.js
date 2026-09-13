@@ -15,7 +15,7 @@ import { suspendUserSchema } from "../../validations/v2/adminValidation.js";
 
 const router = express.Router();
 
-router.use(authenticate, authorize("admin"));
+router.use(authenticate, authorize("admin"));// this line forcres so the next routes can't be acessible unless its passed through authorize and authenticate funcitons.
 
 router.get("/users", listUsers);
 router.patch("/users/:userId/status", validate(suspendUserSchema), suspendUser);

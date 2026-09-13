@@ -12,6 +12,15 @@ import "../styles/reports-form.css";
 
 const formatDate = (value) => (value ? new Date(value).toLocaleDateString("fr-FR") : "-");
 
+const safePdfName = (title) => {
+  const baseName = String(title || "rapport")
+    .trim()
+    .replace(/[\\/:*?"<>|]+/g, "-")
+    .replace(/\s+/g, " ");
+
+  return `${baseName || "rapport"}.pdf`;
+};
+
 const ReportsPageEnhanced = () => {
   const { user } = useAuth();
   const { showToast } = useToast();
@@ -19,6 +28,7 @@ const ReportsPageEnhanced = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [busyId, setBusyId] = useState(null);
+  const [preview, setPreview] = useState(null);
 
   const canValidate = user?.role === "supervisor";
   const isStudent = user?.role === "student";
@@ -41,6 +51,33 @@ const ReportsPageEnhanced = () => {
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  useEffect(() => () => {
+    if (preview?.url) {
+      window.URL.revokeObjectURL(preview.url);
+    }
+  }, [preview?.url]);
+
+  const getReportPdfBlob = async (report) => {
+    const response = await apiClient.get(`/reports/${report.id}/pdf`, { responseType: "blob" });
+    return response.data instanceof Blob
+      ? response.data
+      : new Blob([response.data], { type: "application/pdf" });
+  };
+
+  const getBlobErrorMessage = async (err, fallback) => {
+    const data = err.response?.data;
+    if (data instanceof Blob && data.type?.includes("application/json")) {
+      try {
+        const payload = JSON.parse(await data.text());
+        return payload.message || fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    return err.response?.data?.message || fallback;
+  };
 
   const validateReport = async (reportId, status) => {
     const fallback = status === "validated" ? "Rapport valide." : "Rapport a revoir.";
@@ -75,13 +112,20 @@ const ReportsPageEnhanced = () => {
   const previewPdf = async (report) => {
     try {
       setBusyId(report.id);
-      const response = await apiClient.get(`/reports/${report.id}/pdf`, { responseType: "blob" });
-      const blob = new Blob([response.data], { type: "application/pdf" });
+      const blob = await getReportPdfBlob(report);
       const url = window.URL.createObjectURL(blob);
-      window.open(url, "_blank", "noopener,noreferrer");
-      window.setTimeout(() => window.URL.revokeObjectURL(url), 60000);
+      setPreview((currentPreview) => {
+        if (currentPreview?.url) {
+          window.URL.revokeObjectURL(currentPreview.url);
+        }
+
+        return {
+          url,
+          title: report.title || "Rapport PDF"
+        };
+      });
     } catch (err) {
-      const message = err.response?.data?.message || "Apercu du PDF impossible.";
+      const message = await getBlobErrorMessage(err, "Apercu du PDF impossible.");
       showToast(message, "error");
     } finally {
       setBusyId(null);
@@ -91,21 +135,31 @@ const ReportsPageEnhanced = () => {
   const downloadPdf = async (report) => {
     try {
       setBusyId(report.id);
-      const response = await apiClient.get(`/reports/${report.id}/pdf`, { responseType: "blob" });
-      const url = window.URL.createObjectURL(response.data);
+      const blob = await getReportPdfBlob(report);
+      const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.download = `${report.title || "rapport"}.pdf`;
+      link.download = safePdfName(report.title);
       document.body.appendChild(link);
       link.click();
       link.remove();
-      window.URL.revokeObjectURL(url);
+      window.setTimeout(() => window.URL.revokeObjectURL(url), 1000);
     } catch (err) {
-      const message = err.response?.data?.message || "Telechargement du PDF impossible.";
+      const message = await getBlobErrorMessage(err, "Telechargement du PDF impossible.");
       showToast(message, "error");
     } finally {
       setBusyId(null);
     }
+  };
+
+  const closePreview = () => {
+    setPreview((currentPreview) => {
+      if (currentPreview?.url) {
+        window.URL.revokeObjectURL(currentPreview.url);
+      }
+
+      return null;
+    });
   };
 
   if (loading) return <LoadingSpinner label="Chargement des rapports..." />;
@@ -235,6 +289,36 @@ const ReportsPageEnhanced = () => {
           </div>
         )}
       </Card>
+
+      {preview && (
+        <div className="ds-dialog-overlay" role="presentation" onClick={closePreview}>
+          <div
+            className="ds-dialog ds-dialog--wide report-preview-dialog"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="report-preview-title"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <header className="ds-dialog__header ds-dialog__header--row">
+              <h3 id="report-preview-title">{preview.title}</h3>
+              <button type="button" className="ds-dialog__icon-close" onClick={closePreview} aria-label="Fermer">
+                x
+              </button>
+            </header>
+            <div className="ds-dialog__body report-preview-body">
+              <iframe className="report-preview-frame" title={preview.title} src={preview.url} />
+            </div>
+            <footer className="ds-dialog__footer">
+              <Button type="button" variant="secondary" onClick={closePreview}>
+                Fermer
+              </Button>
+              <Button type="button" onClick={() => window.open(preview.url, "_blank", "noopener,noreferrer")}>
+                Ouvrir dans un onglet
+              </Button>
+            </footer>
+          </div>
+        </div>
+      )}
     </PageLayout>
   );
 };

@@ -1,6 +1,6 @@
-import cors from "cors";
-import dotenv from "dotenv";
-import express from "express";
+import cors from "cors";// what does mean ? : it is a middleware that allows us to make requests from different origins
+import dotenv from "dotenv";// what does mean ? : it is a middleware that allows us to load environment variables from a .env file  
+import express from "express"; // what does mean ? : 
 
 import adminRoutes from "./routes/v2/adminRoutes.js";
 import authRoutes from "./routes/v2/authRoutes.js";
@@ -16,9 +16,9 @@ import { errorHandler, notFound } from "./middlewares/errorMiddleware.js";
 import { requestContext } from "./middlewares/requestContext.js";
 import { query } from "./config/db.js";
 
-dotenv.config();
+dotenv.config(); // what does mean ? : it loads the environment variables from the .env file
 
-const app = express();
+const app = express(); // what does mean ? : it creates an express application mean ? 
 
 const expandAllowedOrigin = (value) => {
   if (!value) {
@@ -43,6 +43,10 @@ const expandAllowedOrigin = (value) => {
   }
 };
 
+const check = (req, res) => {
+  res.json({ status: "ok" });
+}
+
 const allowedOrigins = new Set(
   [
     process.env.FRONTEND_URL,
@@ -56,6 +60,8 @@ const allowedOrigins = new Set(
   ].flatMap(expandAllowedOrigin)
 );
 
+// CORS stands for Cross-Origin Resource Sharing configuration is does blocs external websites from from making requests to your backend API
+// all url that are allowed to communicate with your backend are set in the allowedOrigins variable
 app.use(
   cors({
     origin(origin, callback) {
@@ -70,11 +76,9 @@ app.use(
 );
 app.use(requestContext);
 app.use(express.json({ limit: "1mb" }));
-app.use(express.urlencoded({ extended: true, limit: "1mb" }));
+app.use(express.urlencoded({ extended: true, limit: "1mb" })); // explain this : it parses the request body and makes it available in req.body
 
-app.get("/api/health", (req, res) => {
-  res.json({ status: "ok" });
-});
+app.get("/api/health", check);
 
 app.use("/api/auth", authRoutes);
 app.use("/api/students", studentRoutes);
@@ -86,8 +90,10 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/files", fileRoutes);
 app.use("/api/workflow", workflowRoutes);
-
 app.use(notFound);
 app.use(errorHandler);
+
+// answer : express handles all http methods (get, post, put, delete, etc.) 
+// and how deeply ? answer : it handles all http methods with their corresponding routes and middleware
 
 export default app;

@@ -4,6 +4,7 @@ export const AUTH_STORAGE_EVENT = "stageflow:auth-storage-change";
 
 const hasWindow = typeof window !== "undefined";
 
+//set up a flexible baseURl config for axios switching from env var to local server to current browser host
 const resolveApiBaseUrl = () => {
   if (import.meta.env.VITE_API_BASE_URL) {
     return import.meta.env.VITE_API_BASE_URL;
@@ -16,6 +17,7 @@ const resolveApiBaseUrl = () => {
   return `${window.location.protocol}//${window.location.hostname}:5000/api`;
 };
 
+// it dispatches an event to the window object to notify other components that the auth storage has changed
 const dispatchAuthStorageChange = () => {
   if (!hasWindow) {
     return;
@@ -24,6 +26,7 @@ const dispatchAuthStorageChange = () => {
   window.dispatchEvent(new Event(AUTH_STORAGE_EVENT));
 };
 
+// config some authorization headers for axios, axios it allows to set a default headers for all request
 const setAuthorizationHeader = (token) => {
   if (token) {
     apiClient.defaults.headers.common.Authorization = `Bearer ${token}`;
@@ -97,6 +100,7 @@ const apiClient = axios.create({
 
 setAuthorizationHeader(getStoredToken());
 
+// do something before request is sent
 apiClient.interceptors.request.use((config) => {
   const token = getStoredToken();
   config.headers = config.headers || {};
@@ -115,7 +119,7 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response?.status === 401) {
-      clearStoredSession();
+      clearStoredSession(); //suprimer user and token since its expired
       
       // Only redirect if we're in a browser environment
       if (typeof window !== 'undefined') {

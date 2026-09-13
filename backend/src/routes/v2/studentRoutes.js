@@ -15,7 +15,8 @@ import { taskUpdateSchema, updateStudentProfileSchema } from "../../validations/
 
 const router = express.Router();
 
-router.use(authenticate, authorize("student"));
+
+router.use(authenticate, authorize("student")); // tous les routes suivantes nécessitent une authentification et le rôle student
 
 router.get("/me", getMyProfile);
 router.put("/me", validate(updateStudentProfileSchema), updateMyProfile);

@@ -8,7 +8,14 @@ const AdminProfilePage = () => {
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  useEffect(() => { // how this helps ? 
+    // This useEffect hook is responsible for initializing the admin profile data when 
+    // the component mounts or when the user information changes. 
+    // It sets the profile state with the user's email and role, 
+    // and then updates the loading state to false, allowing the component to render the profile information.
+    // I didn't understand ?
+    // When the AdminProfilePage component is rendered, 
+    // it needs to display the admin's email and role.
     setProfile({
       email: user?.email || "",
       role: user?.role || "admin"

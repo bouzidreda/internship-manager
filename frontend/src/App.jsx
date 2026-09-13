@@ -35,7 +35,7 @@ const App = () => (
     <Route path="/forgot-password" element={<ForgotPasswordPage />} />
     <Route path="/reset-password" element={<ResetPasswordPage />} />
     <Route path="/verify-email" element={<VerifyEmailPage />} />
-
+    // when I tap the url and /app it leads me to login is token is expired or to /app-enhancedashboard, question : who handles this logic ?
     <Route
       path="/app"
       element={
@@ -45,6 +45,7 @@ const App = () => (
       }
     >
       <Route index element={<RoleHomeRedirect />} />
+      //admin Routes
       <Route
         path="dashboard"
         element={
@@ -85,6 +86,7 @@ const App = () => (
           </ProtectedRoute>
         }
       />
+      //students Routes
       <Route
         path="student/profile"
         element={

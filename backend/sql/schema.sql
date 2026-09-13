@@ -35,7 +35,7 @@ CREATE TABLE users (
   role VARCHAR(20) NOT NULL CHECK (role IN ('student','supervisor','admin')),
   is_active BOOLEAN DEFAULT TRUE,
   is_email_verified BOOLEAN DEFAULT TRUE,
-  created_at TIMESTAMP DEFAULT NOW(),
+  created_at TIMESTAMP DEFAULT NOW(), -- it captures where the event especially happen
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
@@ -338,7 +338,7 @@ BEGIN
     NEW.updated_at = NOW();
     RETURN NEW;
 END;
-$$ language 'plpgsql';
+$$ language 'plpgsql'; --tells postgresql that " the code of funciton is written (Procedural Language/PostgreSQL)"
 
 -- Apply trigger to tables with updated_at
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

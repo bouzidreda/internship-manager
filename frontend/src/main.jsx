@@ -14,6 +14,7 @@ applyTheme(storedTheme === "dark" || storedTheme === "light" ? storedTheme : pre
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
+  // BrowserRouter Reads Current URL
     <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
       <ThemeProvider>
         <AuthProvider>

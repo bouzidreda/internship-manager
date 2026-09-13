@@ -53,6 +53,15 @@ services:
       - backend
     ports:
       - "${FRONTEND_HOST_PORT:-8081}:80"
-
+  n8n:
+    image: docker.n8n.io/n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_AI_ASSISTANT_ENABLED=true
+      - N8N_AI_WORKFLOW_BUILDER_ENABLED=true
+    volumes:
+      - n8n_data:/home/node/.n8n
 volumes:
   postgres_data:
+  n8n_data:

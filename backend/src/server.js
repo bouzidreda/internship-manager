@@ -9,7 +9,7 @@ dotenv.config();
 
 const PORT = Number(process.env.PORT || 5000);
 
-const server = http.createServer(app);
+const server = http.createServer(app); // it creates an http server that listens to incoming requests and passes them to the express app
 
 const start = async () => {
   try {

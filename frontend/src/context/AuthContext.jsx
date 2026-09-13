@@ -8,7 +8,6 @@ import apiClient, {
 } from "../api/client";
 
 export const AuthContext = createContext(null);
-
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => getStoredUser());
   const [token, setToken] = useState(() => getStoredToken());
